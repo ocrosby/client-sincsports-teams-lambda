@@ -1,21 +1,32 @@
 const SincSportsService = require('sincsports-service');
+const Helpers = require('lambda-helpers');
 
 exports.handler = (event, context, callback) => {
-    const season = event.season || 'fall';
-    const year = event.year || '2017';
-    const division = event.division || 'U13F02';
+    const responder = Helpers.GatewayResponder.Create(callback);
+
+    let season;
+    let year;
+    let division;
 
     try {
+        console.log(`Received event:\n${JSON.stringify(event)}`);
+
+        season = event.pathParameters.season;
+        year = event.pathParameters.year;
+        division = event.pathParameters.division;
+
+        console.log(`Retrieving SincSports teams in the ${division} for the ${season} of ${year} ...`);
+
         SincSportsService.getTeams(season, year, division)
             .then((teams) => {
-                callback(null, teams);
+                responder.success(teams);
             })
             .catch((err) => {
-                callback(err);
+                responder.error(err);
             });
 
     } catch(err) {
-        callback(err);
+        responder.error(err);
     }
 };
 
