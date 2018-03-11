@@ -15,7 +15,7 @@ exports.handler = (event, context, callback) => {
         year = event.pathParameters.year;
         division = event.pathParameters.division;
 
-        console.log(`Retrieving SincSports teams in the ${division} for the ${season} of ${year} ...`);
+        console.log(`Retrieving SincSports teams in the ${division} division for the ${season} of ${year} ...`);
 
         SincSportsService.getTeams(season, year, division)
             .then((teams) => {
